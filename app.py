@@ -23,15 +23,17 @@ st.caption("Fraud Detection • Traffic Forecasting • Revenue Forecasting")
 # LOAD MODELS
 # ---------------------------------------------------------
 
-MODEL_DIR = Path("models")
+# MODEL_DIR = Path("models")
+fraud_bundle = joblib.load("fraud_model.joblib")
+volume_model = joblib.load("forecast_volume.joblib")
+revenue_model = joblib.load("forecast_revenue.joblib")
+#try:
+    #fraud_bundle = joblib.load(MODEL_DIR / "fraud_model.joblib")
+    #fraud_model = fraud_bundle["model"]
+    #fraud_features = fraud_bundle["feature_columns"]
 
-try:
-    fraud_bundle = joblib.load(MODEL_DIR / "fraud_model.joblib")
-    fraud_model = fraud_bundle["model"]
-    fraud_features = fraud_bundle["feature_columns"]
-
-    volume_model = joblib.load(MODEL_DIR / "forecast_volume.joblib")
-    revenue_model = joblib.load(MODEL_DIR / "forecast_revenue.joblib")
+    #volume_model = joblib.load(MODEL_DIR / "forecast_volume.joblib")
+    #revenue_model = joblib.load(MODEL_DIR / "forecast_revenue.joblib")
 
 except Exception as e:
     st.error(f"Unable to load models.\n\n{e}")

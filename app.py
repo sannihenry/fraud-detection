@@ -309,7 +309,7 @@ try:
 
         .groupby("plaza_id")
 
-        .resample("H")
+        .resample("h")
 
         .agg(
 

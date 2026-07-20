@@ -16,7 +16,7 @@ st.set_page_config(
 # TITLE
 # ---------------------------------------------------------
 
-st.title("🚧 AI-Powered Smart Toll Intelligence Platform")
+st.title("🚧 Toll-Gate Intelligence Platform")
 st.caption("Fraud Detection • Traffic Forecasting • Revenue Forecasting")
 
 # ---------------------------------------------------------

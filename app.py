@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from pathlib import Path
 
 st.set_page_config(
-    page_title="AI-Powered Smart Toll Intelligence Platform",
+    page_title="Toll-Gate Intelligence Platform",
     page_icon="🚧",
     layout="wide"
 )

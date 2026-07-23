@@ -56,28 +56,25 @@ def show_environment_info():
 # MODEL LOADING (cached — only loads once per session)
 # ---------------------------------------------------------
 
-@st.cache_resource(show_spinner="Loading models...")
+@st.cache_resource(show_spinner="Loading AI models...")
 def load_models():
-    fraud_path = MODEL_DIR / "fraud_model.joblib"
-    volume_path = MODEL_DIR / "forecast_volume.joblib"
-    revenue_path = MODEL_DIR / "forecast_revenue.joblib"
+    base = Path(__file__).resolve().parent
 
-    missing = [p.name for p in (fraud_path, volume_path, revenue_path) if not p.exists()]
-    if missing:
-        raise FileNotFoundError(
-            f"Model file(s) not found next to app.py: {missing}. "
-            f"Make sure they were committed/uploaded to the repo."
-        )
+    fraud_path = base / "fraud_model.joblib"
+    volume_path = base / "forecast_volume.joblib"
+    revenue_path = base / "forecast_revenue.joblib"
 
-    fraud_bundle = joblib.load(fraud_path)
-    fraud_model = fraud_bundle["model"]
-    fraud_features = fraud_bundle["feature_columns"]
+    try:
+        fraud_bundle = joblib.load(fraud_path)
+        volume_bundle = joblib.load(volume_path)
+        revenue_bundle = joblib.load(revenue_path)
 
-    volume_model = joblib.load(volume_path)
-    revenue_model = joblib.load(revenue_path)
+        return fraud_bundle, volume_bundle, revenue_bundle
 
-    return fraud_model, fraud_features, volume_model, revenue_model
-
+    except Exception as e:
+        st.error("Failed to load ML models.")
+        st.exception(e)
+        st.stop()
 
 # ---------------------------------------------------------
 # DATA LOADING / VALIDATION (cached per uploaded file)
@@ -85,7 +82,17 @@ def load_models():
 
 @st.cache_data(show_spinner="Reading CSV...")
 def load_data(uploaded_file):
+    try:
     df = pd.read_csv(uploaded_file)
+
+    if df.empty:
+        st.error("The uploaded CSV is empty.")
+        st.stop()
+
+except Exception as e:
+    st.error("Unable to read CSV.")
+    st.exception(e)
+    st.stop()
 
     missing_cols = [c for c in REQUIRED_COLUMNS if c not in df.columns]
     if missing_cols:
